@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>Crypto Price Tracker</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="assets/bootstrap.css">
+        <style>
+            * {
+                color:#283747;
+                font-weight: 800;
+            }
+
+            a:hover {
+                text-decoration: none;
+            }
+
+            .list-group-item {
+                display: flex;
+                justify-content: space-around;
+                align-content: center;
+                transition: 0.4s ease-in-out;
+                cursor: pointer;
+            }
+
+            .list-group-item:hover {
+                background-color:  #0b5345;
+            }
+
+            .list-group-item:hover .list-rank, .list-group-item:hover .list-name, .list-group-item:hover .list-price{
+                color: white;
+            }
+            
+            .list-rank {
+                flex: 1 1;
+                margin-bottom: 0;
+                transition: 0.4s ease-in-out;
+            }
+
+            .list-id {
+                flex: 1 1;
+                margin-bottom: 0;
+                opacity: 0;
+            }
+            
+            .list-name {
+                flex: 9 9;
+                margin-bottom: 0;
+                font-weight: bolder;
+                transition: 0.4s ease-in-out;
+            }
+
+            .list-price {
+                flex: 3 3;
+                margin-bottom: 0;
+                text-align: center;
+                transition: 0.4s ease-in-out;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <div class="jumbotron">
+                <h1 class="display-3"><strong>Crypto Price Tracker</strong></h1>
+                <p class="lead">This is a simple single page app to track the prices of the top 20 cryptocurrencies.</p>
+            </div>
+
+            <div class="container-fluid">
+                <ul class="list-group" style="margin-bottom: 64px;"></ul>
+            </div>
+        </div>
+        <div class="modal fade" id="mymodal" tabindex="-1" role="dialog" aria-labelledby="title" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="title"></h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body"></div>
+                    <div class="modal-footer"></div>
+                </div>
+            </div>
+        </div>
+        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/js/bootstrap.min.js" integrity="sha384-o+RDsa0aLu++PJvFqy8fFScvbHFLtbvScb8AjopnFD+iEQ7wo/CG0xlczd+2O/em" crossorigin="anonymous"></script>
+        <script src="//cdnjs.cloudflare.com/ajax/libs/numeral.js/2.0.6/numeral.min.js"></script>
+        <script type="text/javascript">
+            var addListeners = function(){
+                var coinList = document.querySelectorAll('.list-group-item');
+                for(var i = 0; i < coinList.length; i++){
+                    coinList[i].addEventListener('click', function(){
+                        var xhr2 = new XMLHttpRequest();
+                        xhr2.onreadystatechange = function(){
+                            if((xhr2.readyState == 4) && (xhr2.status == 200)){
+                                var coin = JSON.parse(xhr2.responseText)['data'];
+                                var modalHeader = document.querySelector('.modal-header');
+                                modalHeader.innerHTML = "<h1 class='display-3'>" + coin['symbol'] + "\t" + coin['name'] + "</h1>";
+                                document.querySelector('.modal-body').innerHTML = coin['rank'] + "\t" + coin['circulating_supply'] + "\t" + coin['max_supply'] + "\t" + coin['quotes']['USD']['price'] + "\t" + coin['quotes']['USD']['market_cap'];
+                            }
+                        };
+                        var coinURL = 'https://api.coinmarketcap.com/v2/ticker/' + this.children[1].innerHTML + '/';
+                        xhr2.open('GET', coinURL);
+                        xhr2.send();
+                    });
+                }
+            };
+
+            var getPrices = function(){
+                var xhr = new XMLHttpRequest();
+                var coinWrapper = document.querySelector('.list-group');
+                xhr.onreadystatechange = function(){
+                    if((xhr.readyState == 4) && (xhr.status == 200)) {
+                        var data = JSON.parse(xhr.responseText)['data'];
+                        var firstRow = "<li class=\"list-group-item\"><p class=\"list-rank\">Rank</p><p class='list-id'>-1</p><p class=\"list-name\">Name</p><p class=\"list-price\">Price</p></li>";
+                        var innerHTML = "";
+                        var coinIdList = Object.keys(data);
+                        for(var i = 0; i < coinIdList.length; i++){
+                            var change = data[coinIdList[i]]['quotes']['USD']['percent_change_1h'];
+                            var style = "";
+                            if(change < 0){
+                                style = "style='color: #f44336;'";
+                            }
+                            else{
+                                style = "style='color: #4caf50;'";
+                            }
+                            innerHTML += "<a data-toggle='modal' data-target='#mymodal'><li class='list-group-item'><p class='list-rank'>" + (i + 1) + ".</p><p class='list-id'>" + coinIdList[i] + "</p><p class='list-name'>" + data[coinIdList[i]]['name'] + "</p><p class='list-price'" + style + ">" + data[coinIdList[i]]['quotes']['USD']['price'] + "($)</p></li></a>";
+                        }
+                        coinWrapper.innerHTML = firstRow + innerHTML;
+                        addListeners();
+                    }
+                };
+                var url = "https://api.coinmarketcap.com/v2/ticker/?limit=20&sort=rank";
+                xhr.open('GET', url);
+                xhr.send();
+            };
+
+            getPrices();
+            setInterval(function(){
+                getPrices();
+            }, 30000);
+            
+        </script>
+    </body>
+</html>
