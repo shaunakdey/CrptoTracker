@@ -97,7 +97,7 @@
             <div class="jumbotron" style="background-color: #0b5345;">
                 <h1 class="display-4" style="text-align: center;"><strong  style="color: white;">Crypto Price Tracker</strong></h1>
                 <hr class="my-2" style="background-color: white; height: 1.6px; width: 160px;">
-                <p class="lead" style="color: white; text-align: center;">This is a simple single page app to track the prices of the top 20 cryptocurrencies on Coinmarketcap.</p>
+                <p class="lead" style="color: white; text-align: center;">This is a simple single page app to track the prices of the top 25 cryptocurrencies on Coinmarketcap.</p>
             </div>
 
             <div class="container">
@@ -135,11 +135,11 @@
                         .then(function(data){
                             var coin = data['data'];
                             var change1h = coin['quotes']['INR']['percent_change_1h'];
-                            var style1h = change1h > 0 ? "style='color: #f44336;'" : "style='color: #4caf50;'";
+                            var style1h = change1h < 0 ? "style='color: #f44336;'" : "style='color: #4caf50;'";
                             var change24h = coin['quotes']['INR']['percent_change_24h'];
-                            var style24h = change24h > 0 ? "style='color: #f44336;'" : "style='color: #4caf50;'";
+                            var style24h = change24h < 0 ? "style='color: #f44336;'" : "style='color: #4caf50;'";
                             var change7d = coin['quotes']['INR']['percent_change_7d'];
-                            var style7d = change7d > 0 ? "style='color: #f44336;'" : "style='color: #4caf50;'";
+                            var style7d = change7d < 0 ? "style='color: #f44336;'" : "style='color: #4caf50;'";
                             document.querySelector('.modal-title').innerHTML = "<h1 class='display-5'>" + coin['name'] + " (" + coin['symbol'] + ")</h1>";
                             document.querySelector('.modal-body').innerHTML = "<p>Rank : " + coin['rank'] + "</p><p>Price : " + numeral(coin['quotes']['INR']['price']).format('0,0.000') + " INR</p><p>Circulating Supply : " + numeral(coin['circulating_supply']).format('0,0') + "</p><p>Maximum Supply : " + numeral(coin['max_supply']).format('0,0') + "</p><p>Market Capitalization : " + numeral(coin['quotes']['INR']['market_cap']).format('0,0') + " INR</p><p " + style1h + ">Change (1h) : " + change1h + "%</p><p " + style24h + ">Change (24h) : " + change24h + "%</p><p " + style7d + ">Change (7d) : " + change7d + "%</p>";
                         });
