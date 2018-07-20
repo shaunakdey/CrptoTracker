@@ -149,7 +149,7 @@
 
             var getPrices = function(){
                 var coinWrapper = document.querySelector('.list-group');
-                var url = "https://api.coinmarketcap.com/v2/ticker/?limit=25&convert=INR&sort=rank";
+                var url = "https://api.coinmarketcap.com/v2/ticker/?limit=25&convert=INR&sort=rank&structure=array";
                 fetch(url)
                 .then(function(res){
                     return res.json();
@@ -158,9 +158,9 @@
                     data = data['data'];
                     var firstRow = "<li class='list-group-item'><p class='list-rank'>Rank</p><p class='list-id'>-1</p><p class='list-name'>Name</p><p class='list-price'>Price</p><p class='list-change'>Change(24h)</p></li>";
                     var innerHTML = "";
-                    var coinIdList = Object.keys(data);
-                    for(var i = 0; i < coinIdList.length; i++){
-                        var change = data[coinIdList[i]]['quotes']['INR']['percent_change_24h'];
+                    // var coinIdList = Object.keys(data);
+                    for(var i = 0; i < data.length; i++){
+                        var change = data[i]['quotes']['INR']['percent_change_24h'];
                         var style = "";
                         if(change < 0){
                             style = "style='color: #f44336;'";
@@ -168,7 +168,7 @@
                         else{
                             style = "style='color: #4caf50;'";
                         }
-                        innerHTML += "<a data-toggle='modal' data-target='#mymodal'><li class='list-group-item'><p class='list-rank'>" + (i + 1) + ".</p><p class='list-id'>" + coinIdList[i] + "</p><p class='list-name'>" + data[coinIdList[i]]['name'] + " (" + data[coinIdList[i]]['symbol'] + ")</p><p class='list-price'" + style + ">" + numeral(data[coinIdList[i]]['quotes']['INR']['price']).format('0,0.000') + " INR</p><p class='list-change'" + style + ">" + change + " %</p></li></a>";
+                        innerHTML += "<a data-toggle='modal' data-target='#mymodal'><li class='list-group-item'><p class='list-rank'>" + (i + 1) + ".</p><p class='list-id'>" + data[i]['id'] + "</p><p class='list-name'>" + data[i]['name'] + " (" + data[i]['symbol'] + ")</p><p class='list-price'" + style + ">" + numeral(data[i]['quotes']['INR']['price']).format('0,0.000') + " INR</p><p class='list-change'" + style + ">" + change + " %</p></li></a>";
                     }
                     coinWrapper.innerHTML = firstRow + innerHTML;
                     addListeners();
