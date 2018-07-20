@@ -5,7 +5,6 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <title>Crypto Price Tracker</title>
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.0/css/all.css" integrity="sha384-lKuwvrZot6UHsBSfcMvOkWwlCMgc0TaWr+30HWe3a4ltaBwTZhyTEggF5tJv8tbt" crossorigin="anonymous">
         <link rel="stylesheet" href="assets/bootstrap.css">
         <link href="https://fonts.googleapis.com/css?family=Lato:900" rel="stylesheet">
         <style>
@@ -29,7 +28,7 @@
 
             ul {
                 box-shadow: 4px 8px 8px gray, -4px 8px 8px gray;
-                border: 1px solid #0b5345;
+                border: 1px solid #1c2833;
             }
 
             .list-group-item {
@@ -38,15 +37,15 @@
                 align-content: center;
                 transition: 0.4s ease-in-out;
                 cursor: pointer;
-                border-bottom: 1px solid #0b5345;
+                border-bottom: 1px solid #1c2833;
             }
 
             .list-group-item:nth-child(1) {
-                border-top: 1px solid #0b5345;
+                border-top: 1px solid #1c2833;
             }
 
             .list-group-item:hover {
-                background-color:  #0b5345;
+                background-color:  #1c2833;
             }
 
             .list-group-item:hover .list-rank, .list-group-item:hover .list-name, .list-group-item:hover .list-price, .list-group-item:hover .list-change{
@@ -94,7 +93,7 @@
     </head>
     <body>
         <div class="container-fluid">
-            <div class="jumbotron" style="background-color: #0b5345;">
+            <div class="jumbotron" style="background-color: #1c2833;">
                 <h1 class="display-4" style="text-align: center;"><strong  style="color: white;">Crypto Price Tracker</strong></h1>
                 <hr class="my-2" style="background-color: white; height: 1.6px; width: 160px;">
                 <p class="lead" style="color: white; text-align: center;">This is a simple single page app to track the prices of the top 25 cryptocurrencies on Coinmarketcap.</p>
@@ -107,14 +106,12 @@
         <div class="modal fade" id="mymodal" tabindex="-1" role="dialog" aria-labelledby="title" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
                 <div class="modal-content">
-                    <div class="modal-header" style="background-color: #0b5345; color: white;">
+                    <div class="modal-header" style="background-color: #1c2833; color: white;">
                         <h5 class="modal-title" id="title"></h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <i class="fas fa-times" style="color: white;"></i>
-                        </button>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: white; font-size: 16px;">Close</button>
                     </div>
                     <div class="modal-body"></div>
-                    <div class="modal-footer" style="background-color: #0b5345;"></div>
+                    <div class="modal-footer" style="background-color: #1c2833;"></div>
                 </div>
             </div>
         </div>
@@ -156,9 +153,8 @@
                 })
                 .then(function(data){
                     data = data['data'];
-                    var firstRow = "<li class='list-group-item'><p class='list-rank'>Rank</p><p class='list-id'>-1</p><p class='list-name'>Name</p><p class='list-price'>Price</p><p class='list-change'>Change(24h)</p></li>";
+                    var firstRow = "<li class='list-group-item' style='background-color: #1b2631;'><p class='list-rank' style='color: white;'>Rank</p><p class='list-id' style='color: white;'>-1</p><p class='list-name' style='color: white;'>Name</p><p class='list-price' style='color: white;'>Price</p><p class='list-change' style='color: white;'>Change(24h)</p></li>";
                     var innerHTML = "";
-                    // var coinIdList = Object.keys(data);
                     for(var i = 0; i < data.length; i++){
                         var change = data[i]['quotes']['INR']['percent_change_24h'];
                         var style = "";
@@ -177,8 +173,7 @@
             getPrices();
             setInterval(function(){
                 getPrices();
-            }, 30000);
-            
+            }, 20000);
         </script>
     </body>
 </html>
